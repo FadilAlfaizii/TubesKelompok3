@@ -112,3 +112,19 @@ def edit_pertanyaan():
     else:
         print("Pertanyaan atau jawaban tidak boleh kosong!")
 
+# Mulai Kuis
+def take_quiz():
+    if queue_pertanyaan.kosong():
+        messagebox.showerror("Error", "Tidak ada pertanyaan yang tersedia for the quiz.")
+        return
+    pertanyaan = queue_pertanyaan.tampil()
+    skor = 0
+    for q in pertanyaan:
+        jawaban = simpledialog.askstring("Kuis", q["pertanyaan"])
+        if jawaban and jawaban.lower() == q["jawaban"].lower():
+            skor += 1
+    score_stack.push(skor)  # Simpan skor ke Stack
+    messagebox.showinfo("Kuis Selesai", f"Skor Anda: {skor}/{len(pertanyaan)}")
+
+
+
