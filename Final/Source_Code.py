@@ -64,7 +64,6 @@ class Queue:
     def kosong(self):
         return self.front is None
 
-users = {"admin": "admin"}  # Default login
 q_pertanyaan = Queue() # Queue untuk soal
 
 # Tambah Pertanyaan
