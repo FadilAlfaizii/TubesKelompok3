@@ -24,6 +24,7 @@ class Stack:
     
     def size(self):
         return len(self.items)
+
 # Struktur Data Queue
 class Node:
     def __init__(self, data=None):
@@ -111,4 +112,6 @@ def edit_pertanyaan():
         print("Pertanyaan berhasil diupdate!")
     else:
         print("Pertanyaan atau jawaban tidak boleh kosong!")
+
+score_stack = Stack()  # Stack untuk skor
 
