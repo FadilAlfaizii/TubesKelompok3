@@ -126,5 +126,18 @@ def take_quiz():
     score_stack.push(skor)  # Simpan skor ke Stack
     messagebox.showinfo("Kuis Selesai", f"Skor Anda: {skor}/{len(pertanyaan)}")
 
+# Lihat Total Skor 
+def view_total_score():
+    if score_stack.kosong():
+        messagebox.showinfo("Total Skor", "Belum ada skor yang tersedia.")
+        return
+    total_score = sum(score_stack.items)
+    latest_score = score_stack.peek()
+    messagebox.showinfo("Total Skor", f"Total skor: {total_score}\nSkor terbaru: {latest_score}")
+
+
+
+
+
 
 
