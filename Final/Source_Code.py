@@ -1,3 +1,29 @@
+# Struktur Data Stack
+class Stack:
+    def __init__(self, capacity=10):
+        self.capacity = capacity
+        self.items = []
+    
+    def kosong(self):
+        return len(self.items) == 0
+    
+    def push(self, item):
+        if len(self.items) >= self.capacity:
+            raise OverflowError("Stack penuh")
+        self.items.append(item)
+
+    def pop(self):
+        if not self.kosong():
+            return self.items.pop()
+        raise IndexError("Pop dari stack yang kosong")
+
+    def peek(self):
+        if not self.kosong():
+            return self.items[-1]
+        raise IndexError("Peek dari stack yang kosong")
+    
+    def size(self):
+        return len(self.items)
 # Struktur Data Queue
 class Node:
     def __init__(self, data=None):
@@ -85,3 +111,4 @@ def edit_pertanyaan():
         print("Pertanyaan berhasil diupdate!")
     else:
         print("Pertanyaan atau jawaban tidak boleh kosong!")
+
