@@ -37,7 +37,7 @@ class Queue:
     def kosong(self):
         return self.front is None
 
-q_pertanyaan = Queue()
+q_pertanyaan = Queue() # Queue untuk soal
 
 # Tambah Pertanyaan
 def tambah_pertanyaan():
@@ -64,3 +64,24 @@ def hapus_pertanyaan():
         print("Pertanyaan deleted from the quiz!")
     except IndexError as e:
         print(str(e))
+
+# Edit Pertanyaan
+def edit_pertanyaan():
+    if q_pertanyaan.kosong():
+        print("Tidak ada pertanyaan yang tersedia untuk diubah.")
+        return
+    pertanyaan = q_pertanyaan.tampil()
+    list_pertanyaan = "\n".join([f"{idx + 1}. {q['pertanyaan']}" for idx, q in enumerate(pertanyaan)])
+    index_terpilih = int(input(f"Pilih nomor pertanyaan yang ingin diubah:\n\n{list_pertanyaan}")) - 1
+    if index_terpilih < 0 or index_terpilih >= len(pertanyaan):
+        print("Nomor tersebut tidak ada!")
+        return
+    pertanyaan_terpilih = pertanyaan[index_terpilih]
+    pertanyaan_baru = input(f"Pertanyaan Sebelum: {pertanyaan_terpilih['pertanyaan']}\n\nEnter new pertanyaan:")
+    jawaban_baru = input(f"Jawaban Sebelum: {pertanyaan_terpilih['jawaban']}\n\nEnter new jawaban:")
+    if pertanyaan_baru and jawaban_baru:
+        pertanyaan_terpilih["pertanyaan"] = pertanyaan_baru
+        pertanyaan_terpilih["jawaban"] = jawaban_baru
+        print("Pertanyaan berhasil diupdate!")
+    else:
+        print("Pertanyaan atau jawaban tidak boleh kosong!")
