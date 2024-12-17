@@ -68,7 +68,6 @@ class Queue:
 q_pertanyaan = Queue() # Queue untuk soal
 score_stack = Stack()  # Stack untuk skor
 
-
 # Tambah Pertanyaan
 def tambah_pertanyaan():
     pertanyaan = input("Masukkan pertanyaan: ")
@@ -135,5 +134,34 @@ def load_pertanyaan():
                 q_pertanyaan.enqueue({"pertanyaan": pertanyaan, "jawaban": jawaban})
     except FileNotFoundError:
         pass
+
+
+# Mulai Kuis
+def take_quiz():
+    if q_pertanyaan.kosong():
+        print("Error", "Tidak ada pertanyaan yang tersedia for the quiz.")
+        return
+    pertanyaan = q_pertanyaan.tampil()
+    skor = 0
+    for q in pertanyaan:
+        jawaban = input("Kuis", q["pertanyaan"])
+        if jawaban and jawaban.lower() == q["jawaban"].lower():
+            skor += 1
+    score_stack.push(skor)  # Simpan skor ke Stack
+    print("Kuis Selesai", f"Skor Anda: {skor}/{len(pertanyaan)}")
+
+
+# Lihat Total Skor 
+def view_total_score():
+    if score_stack.kosong():
+        print("Total Skor", "Belum ada skor yang tersedia.")
+        return
+    total_score = sum(score_stack.items)
+    latest_score = score_stack.peek()
+    print("Total Skor", f"Total skor: {total_score}\nSkor terbaru: {latest_score}")
+
+
+
+
 
 
