@@ -24,6 +24,7 @@ class Stack:
     
     def size(self):
         return len(self.items)
+
 # Struktur Data Queue
 class Node:
     def __init__(self, data=None):
@@ -64,6 +65,7 @@ class Queue:
         return self.front is None
 
 q_pertanyaan = Queue() # Queue untuk soal
+score_stack = Stack()  # Stack untuk skor
 
 # Tambah Pertanyaan
 def tambah_pertanyaan():
@@ -134,7 +136,6 @@ def view_total_score():
     total_score = sum(score_stack.items)
     latest_score = score_stack.peek()
     messagebox.showinfo("Total Skor", f"Total skor: {total_score}\nSkor terbaru: {latest_score}")
-
 
 
 
