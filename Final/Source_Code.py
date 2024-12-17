@@ -64,7 +64,10 @@ class Queue:
     def kosong(self):
         return self.front is None
 
+
 q_pertanyaan = Queue() # Queue untuk soal
+score_stack = Stack()  # Stack untuk skor
+
 
 # Tambah Pertanyaan
 def tambah_pertanyaan():
@@ -72,6 +75,7 @@ def tambah_pertanyaan():
     jawaban = input("Masukkan jawaban: ")
     if pertanyaan and jawaban:
         q_pertanyaan.enqueue({"pertanyaan": pertanyaan, "jawaban": jawaban})
+        simpan_pertanyaan()
 
 # Lihat Pertanyaan
 def lihat_pertanyaan():
@@ -88,6 +92,7 @@ def hapus_pertanyaan():
         if q_pertanyaan.kosong():
             raise IndexError("Tidak ada pertanyaan to delete.")
         q_pertanyaan.dequeue()
+        simpan_pertanyaan()
         print("Pertanyaan deleted from the quiz!")
     except IndexError as e:
         print(str(e))
@@ -113,5 +118,22 @@ def edit_pertanyaan():
     else:
         print("Pertanyaan atau jawaban tidak boleh kosong!")
 
-score_stack = Stack()  # Stack untuk skor
+
+def simpan_pertanyaan():
+    with open("pertanyaan.txt", "w") as file:
+        pertanyaan = q_pertanyaan.tampil()
+        for q in pertanyaan:
+            file.write(f"{q['pertanyaan']}\n{q['jawaban']}\n\n")
+
+
+def load_pertanyaan():
+    try:
+        with open("pertanyaan.txt", "r") as file:
+            for line in file:
+                pertanyaan = line.strip()
+                jawaban = file.readline().strip()
+                q_pertanyaan.enqueue({"pertanyaan": pertanyaan, "jawaban": jawaban})
+    except FileNotFoundError:
+        pass
+
 
