@@ -65,6 +65,7 @@ class Queue:
         return self.front is None
 
 q_pertanyaan = Queue() # Queue untuk soal
+score_stack = Stack()  # Stack untuk skor
 
 # Tambah Pertanyaan
 def tambah_pertanyaan():
@@ -113,5 +114,31 @@ def edit_pertanyaan():
     else:
         print("Pertanyaan atau jawaban tidak boleh kosong!")
 
-score_stack = Stack()  # Stack untuk skor
+# Mulai Kuis
+def take_quiz():
+    if queue_pertanyaan.kosong():
+        messagebox.showerror("Error", "Tidak ada pertanyaan yang tersedia for the quiz.")
+        return
+    pertanyaan = queue_pertanyaan.tampil()
+    skor = 0
+    for q in pertanyaan:
+        jawaban = simpledialog.askstring("Kuis", q["pertanyaan"])
+        if jawaban and jawaban.lower() == q["jawaban"].lower():
+            skor += 1
+    score_stack.push(skor)  # Simpan skor ke Stack
+    messagebox.showinfo("Kuis Selesai", f"Skor Anda: {skor}/{len(pertanyaan)}")
+
+# Lihat Total Skor 
+def view_total_score():
+    if score_stack.kosong():
+        messagebox.showinfo("Total Skor", "Belum ada skor yang tersedia.")
+        return
+    total_score = sum(score_stack.items)
+    latest_score = score_stack.peek()
+    messagebox.showinfo("Total Skor", f"Total skor: {total_score}\nSkor terbaru: {latest_score}")
+
+
+
+
+
 
