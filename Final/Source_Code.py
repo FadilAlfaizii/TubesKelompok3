@@ -125,7 +125,7 @@ def simpan_pertanyaan():
             file.write(f"{q['pertanyaan']}\n{q['jawaban']}\n\n")
 
 
-def load_pertanyaan():
+def muat_pertanyaan():
     try:
         with open("pertanyaan.txt", "r") as file:
             for line in file:
@@ -159,9 +159,3 @@ def view_total_score():
     total_score = sum(score_stack.items)
     latest_score = score_stack.peek()
     print("Total Skor", f"Total skor: {total_score}\nSkor terbaru: {latest_score}")
-
-
-
-
-
-
