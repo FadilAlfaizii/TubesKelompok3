@@ -65,9 +65,61 @@ class Queue:
         return self.front is None
 
 
-q_pertanyaan = Queue() # Queue untuk soal
-score_stack = Stack()  # Stack untuk skor
+users = {"admin": "admin"}  # Default login
+queue_pertanyaan = Queue()  # Queue untuk soal
+score_stack = Stack()  # Stack untuk skor 
 
+def register():
+    new_username = simpledialog.askstring("Register", "Masukkan Username:")
+    if not new_username:
+        messagebox.showerror("Error", "Username tidak boleh kosong.")
+        return
+    elif new_username in users:
+        messagebox.showerror("Error", "Username telah dipakai.")
+        return
+
+    new_password = simpledialog.askstring("Register", "Masukkan Password:")
+    if not new_password:
+        messagebox.showerror("Error", "Password tidak boleh kosong.")
+        return
+
+    users[new_username] = new_password
+    simpan_pengguna()  # Simpan perubahan data pengguna
+    messagebox.showinfo("Sukses", f"Akun baru untuk username: {new_username}")
+
+def simpan_pengguna():
+    with open("users.txt", "w") as file:
+        for username, password in users.items():
+            file.write(f"{username},{password}\n")
+
+def memuat_pengguna():
+    try:
+        with open("users.txt", "r") as file:
+            for line in file:
+                username, password = line.strip().split(",")
+                users[username] = password
+    except FileNotFoundError:
+        pass
+
+def logout(current_window):
+    current_window.destroy()
+    messagebox.showinfo("Logout", "Anda berhasil logout.")
+    main_login()
+
+def login():
+    username = username_entry.get()
+    password = password_entry.get()
+    if username == "admin" and users[username] == password:
+        messagebox.showinfo("Sukses", "Login sukses!")
+        login_window.destroy()
+        show_menu()
+    elif username in users and users[username] == password:
+        messagebox.showinfo("Sukses", "Login sukses!")
+        login_window.destroy()
+        show_menu_user()
+    else:
+        messagebox.showerror
+        
 # Tambah Pertanyaan
 def tambah_pertanyaan():
     pertanyaan = input("Masukkan pertanyaan: ")
