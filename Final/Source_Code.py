@@ -65,9 +65,61 @@ class Queue:
         return self.front is None
 
 
-q_pertanyaan = Queue() # Queue untuk soal
-score_stack = Stack()  # Stack untuk skor
+users = {"admin": "admin"}  # Default login
+q_pertanyaan = Queue()  # Queue untuk soal
+skor_stack = Stack()  # Stack untuk skor 
 
+def register():
+    new_username = simpledialog.askstring("Register", "Masukkan Username:")
+    if not new_username:
+        messagebox.showerror("Error", "Username tidak boleh kosong.")
+        return
+    elif new_username in users:
+        messagebox.showerror("Error", "Username telah dipakai.")
+        return
+
+    new_password = simpledialog.askstring("Register", "Masukkan Password:")
+    if not new_password:
+        messagebox.showerror("Error", "Password tidak boleh kosong.")
+        return
+
+    users[new_username] = new_password
+    simpan_pengguna()  # Simpan perubahan data pengguna
+    messagebox.showinfo("Sukses", f"Akun baru untuk username: {new_username}")
+
+def simpan_pengguna():
+    with open("users.txt", "w") as file:
+        for username, password in users.items():
+            file.write(f"{username},{password}\n")
+
+def memuat_pengguna():
+    try:
+        with open("users.txt", "r") as file:
+            for line in file:
+                username, password = line.strip().split(",")
+                users[username] = password
+    except FileNotFoundError:
+        pass
+
+def logout(current_window):
+    current_window.destroy()
+    messagebox.showinfo("Logout", "Anda berhasil logout.")
+    main_login()
+
+def login():
+    username = username_entry.get()
+    password = password_entry.get()
+    if username == "admin" and users[username] == password:
+        messagebox.showinfo("Sukses", "Login sukses!")
+        login_window.destroy()
+        show_menu()
+    elif username in users and users[username] == password:
+        messagebox.showinfo("Sukses", "Login sukses!")
+        login_window.destroy()
+        show_menu_user()
+    else:
+        messagebox.showerror
+        
 # Tambah Pertanyaan
 def tambah_pertanyaan():
     pertanyaan = input("Masukkan pertanyaan: ")
@@ -147,15 +199,29 @@ def take_quiz():
         jawaban = input("Kuis", q["pertanyaan"])
         if jawaban and jawaban.lower() == q["jawaban"].lower():
             skor += 1
-    score_stack.push(skor)  # Simpan skor ke Stack
+    skor_stack.push(skor)  # Simpan skor ke Stack
     print("Kuis Selesai", f"Skor Anda: {skor}/{len(pertanyaan)}")
 
 
 # Lihat Total Skor 
 def view_total_score():
-    if score_stack.kosong():
+    if skor_stack.kosong():
         print("Total Skor", "Belum ada skor yang tersedia.")
         return
-    total_score = sum(score_stack.items)
-    latest_score = score_stack.peek()
+    total_score = sum(skor_stack.items)
+    latest_score = skor_stack.peek()
     print("Total Skor", f"Total skor: {total_score}\nSkor terbaru: {latest_score}")
+
+# Fungsi Reset Skor
+def reset_score():
+    if skor_stack.kosong():
+        messagebox.showinfo("Reset Skor", "Tidak ada skor untuk direset.")
+        return
+    skor_stack.items = []  # Reset skor dalam stack
+    messagebox.showinfo("Reset Skor", "Semua skor berhasil direset!")
+
+
+
+
+
+
