@@ -132,20 +132,21 @@ def login():
 
 # Tambah Pertanyaan
 def tambah_pertanyaan():
-    pertanyaan = input("Masukkan pertanyaan: ")
-    jawaban = input("Masukkan jawaban: ")
+    pertanyaan = simpledialog.askstring("Tambah Pertanyaan", "Masukkan pertanyaan:")    
+    jawaban = simpledialog.askstring("Tambah Jawaban", "Masukkan jawaban yang benar:")
     if pertanyaan and jawaban:
         q_pertanyaan.enqueue({"pertanyaan": pertanyaan, "jawaban": jawaban})
-        simpan_pertanyaan()
+        simpan_pertanyaan()  # Simpan soal setelah ditambah
+        messagebox.showinfo("Sukses", "Pertanyaan added to the quiz!")
 
 # Lihat Pertanyaan
 def lihat_pertanyaan():
     if q_pertanyaan.kosong():
-        print("Tidak ada pertanyaan yang tersedia.")
-    else:
-        pertanyaan = q_pertanyaan.tampil()
-        for idx, q in enumerate(pertanyaan):
-            print(f"{idx + 1}. {q['pertanyaan']}")
+        messagebox.showinfo("Pertanyaan", "Tidak ada pertanyaan yang tersedia.")
+        return
+    pertanyaan = q_pertanyaan.tampil()
+    list_pertanyaan = "\n".join([f"{idx + 1}. {q['pertanyaan']}" for idx, q in enumerate(pertanyaan)])
+    messagebox.showinfo("Pertanyaan", list_pertanyaan)
 
 # Hapus Pertanyaan
 def hapus_pertanyaan():
@@ -153,31 +154,34 @@ def hapus_pertanyaan():
         if q_pertanyaan.kosong():
             raise IndexError("Tidak ada pertanyaan to delete.")
         q_pertanyaan.dequeue()
-        simpan_pertanyaan()
-        print("Pertanyaan deleted from the quiz!")
+        simpan_pertanyaan()  # Simpan soal setelah dihapus
+        messagebox.showinfo("Sukses", "Pertanyaan deleted from the quiz!")
     except IndexError as e:
-        print(str(e))
+        messagebox.showerror("Error", str(e))
 
 # Edit Pertanyaan
 def edit_pertanyaan():
     if q_pertanyaan.kosong():
-        print("Tidak ada pertanyaan yang tersedia untuk diubah.")
+        messagebox.showinfo("Edit Pertanyaan", "Tidak ada pertanyaan yang tersedia untuk diubah.")
         return
     pertanyaan = q_pertanyaan.tampil()
     list_pertanyaan = "\n".join([f"{idx + 1}. {q['pertanyaan']}" for idx, q in enumerate(pertanyaan)])
-    index_terpilih = int(input(f"Pilih nomor pertanyaan yang ingin diubah:\n\n{list_pertanyaan}")) - 1
-    if index_terpilih < 0 or index_terpilih >= len(pertanyaan):
-        print("Nomor tersebut tidak ada!")
+    selected_idx = simpledialog.askinteger("Edit Pertanyaan", f"Select pertanyaan number untuk diubah:\n\n{list_pertanyaan}")
+    
+    if selected_idx is None or selected_idx < 1 or selected_idx > len(pertanyaan):
+        messagebox.showerror("Error", "Invalid selection!")
         return
-    pertanyaan_terpilih = pertanyaan[index_terpilih]
-    pertanyaan_baru = input(f"Pertanyaan Sebelum: {pertanyaan_terpilih['pertanyaan']}\n\nEnter new pertanyaan:")
-    jawaban_baru = input(f"Jawaban Sebelum: {pertanyaan_terpilih['jawaban']}\n\nEnter new jawaban:")
+    
+    pertanyaan_terpilih = pertanyaan[selected_idx - 1]
+    pertanyaan_baru = simpledialog.askstring("Edit Pertanyaan", f"Current pertanyaan: {pertanyaan_terpilih['pertanyaan']}\n\nEnter new pertanyaan:")
+    jawaban_baru = simpledialog.askstring("Edit Jawaban", f"Current jawaban: {pertanyaan_terpilih['jawaban']}\n\nEnter new jawaban:")
+    
     if pertanyaan_baru and jawaban_baru:
         pertanyaan_terpilih["pertanyaan"] = pertanyaan_baru
         pertanyaan_terpilih["jawaban"] = jawaban_baru
-        print("Pertanyaan berhasil diupdate!")
+        messagebox.showinfo("Sukses", "Pertanyaan successfully updated!")
     else:
-        print("Pertanyaan atau jawaban tidak boleh kosong!")
+        messagebox.showerror("Error", "Pertanyaan or jawaban cannot be empty.")
 
 
 def simpan_pertanyaan():
@@ -199,7 +203,7 @@ def muat_pertanyaan():
 
 
 # Mulai Kuis
-def take_quiz():
+def mulai_kuis():
     if q_pertanyaan.kosong():
         print("Error", "Tidak ada pertanyaan yang tersedia for the quiz.")
         return
@@ -214,7 +218,7 @@ def take_quiz():
 
 
 # Lihat Total Skor 
-def view_total_score():
+def lihat_total_skor():
     if score_stack.kosong():
         print("Total Skor", "Belum ada skor yang tersedia.")
         return
@@ -222,13 +226,15 @@ def view_total_score():
     latest_score = score_stack.peek()
     print("Total Skor", f"Total skor: {total_score}\nSkor terbaru: {latest_score}")
 
+
 # Fungsi Reset Skor
-def reset_score():
+def reset_skor():
     if score_stack.kosong():
         messagebox.showinfo("Reset Skor", "Tidak ada skor untuk direset.")
         return
     score_stack.items = []  # Reset skor dalam stack
     messagebox.showinfo("Reset Skor", "Semua skor berhasil direset!")
+
 
 # Menunjukkan menu
 def show_menu():
@@ -238,12 +244,12 @@ def show_menu():
 
     tk.Label(menu_window, text="Kuis Management System", font=("Helvetica", 16, "bold"), bg="#4682b4", fg="white", padx=10, pady=10).pack(fill=tk.X)
 
-    tk.Button(menu_window, text="Tambah Pertanyaan", command=add_question, font=("Arial", 12), bg="#add8e6", fg="black", width=20).pack(pady=10)
-    tk.Button(menu_window, text="Lihat Pertanyaan", command=view_questions, font=("Arial", 12), bg="#add8e6", fg="black", width=20).pack(pady=10)
-    tk.Button(menu_window, text="Edit Pertanyaan", command=edit_question, font=("Arial", 12), bg="#add8e6", fg="black", width=20).pack(pady=10)
-    tk.Button(menu_window, text="Hapus Pertanyaan", command=delete_question, font=("Arial", 12), bg="#add8e6", fg="black", width=20).pack(pady=10)
-    tk.Button(menu_window, text="Mulai Kuis", command=take_quiz, font=("Arial", 12), bg="#add8e6", fg="black", width=20).pack(pady=10)
-    tk.Button(menu_window, text="Lihat Total Skor", command=view_total_score, font=("Arial", 12), bg="#add8e6", fg="black", width=20).pack(pady=10)
+    tk.Button(menu_window, text="Tambah Pertanyaan", command=tambah_pertanyaan, font=("Arial", 12), bg="#add8e6", fg="black", width=20).pack(pady=10)
+    tk.Button(menu_window, text="Lihat Pertanyaan", command=lihat_pertanyaan, font=("Arial", 12), bg="#add8e6", fg="black", width=20).pack(pady=10)
+    tk.Button(menu_window, text="Edit Pertanyaan", command=edit_pertanyaan, font=("Arial", 12), bg="#add8e6", fg="black", width=20).pack(pady=10)
+    tk.Button(menu_window, text="Hapus Pertanyaan", command=hapus_pertanyaan, font=("Arial", 12), bg="#add8e6", fg="black", width=20).pack(pady=10)
+    tk.Button(menu_window, text="Mulai Kuis", command=mulai_kuis, font=("Arial", 12), bg="#add8e6", fg="black", width=20).pack(pady=10)
+    tk.Button(menu_window, text="Lihat Total Skor", command=lihat_total_skor, font=("Arial", 12), bg="#add8e6", fg="black", width=20).pack(pady=10)
     tk.Button(menu_window, text="Exit", command=menu_window.destroy, font=("Arial", 12), bg="#ff7f7f", fg="black", width=20).pack(pady=10)
 
     menu_window.geometry("400x400")
@@ -257,8 +263,8 @@ def show_menu_user():
 
     tk.Label(menu_window, text="Kuis Management System", font=("Helvetica", 16, "bold"), bg="#4682b4", fg="white", padx=10, pady=10).pack(fill=tk.X)
 
-    tk.Button(menu_window, text="Mulai Kuis", command=take_quiz, font=("Arial", 12), bg="#add8e6", fg="black", width=20).pack(pady=10)
-    tk.Button(menu_window, text="Lihat Total Skor", command=view_total_score, font=("Arial", 12), bg="#add8e6", fg="black", width=20).pack(pady=10)
+    tk.Button(menu_window, text="Mulai Kuis", command=mulai_kuis, font=("Arial", 12), bg="#add8e6", fg="black", width=20).pack(pady=10)
+    tk.Button(menu_window, text="Lihat Total Skor", command=lihat_total_skor, font=("Arial", 12), bg="#add8e6", fg="black", width=20).pack(pady=10)
     tk.Button(menu_window, text="Logout", command=lambda: logout(menu_window), font=("Arial", 12), bg="#ff7f7f").pack(pady=10)
 
     menu_window.geometry("400x400")
@@ -297,6 +303,6 @@ def main_login():
 #untuk memunculkan funsgi fungsinya
 if __name__ == "__main__":
     memuat_pengguna()
-    load_questions()
+    muat_pertanyaan()
     main_login()
 
