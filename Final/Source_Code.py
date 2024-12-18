@@ -249,6 +249,18 @@ def show_menu():
     menu_window.geometry("400x400")
     menu_window.mainloop()
 
+#menunjukkan menu untuk user
+def show_menu_user():
+    menu_window = tk.Tk()
+    menu_window.title("Kuis Menu")
+    menu_window.configure(bg="#f0f8ff")
 
+    tk.Label(menu_window, text="Kuis Management System", font=("Helvetica", 16, "bold"), bg="#4682b4", fg="white", padx=10, pady=10).pack(fill=tk.X)
 
+    tk.Button(menu_window, text="Mulai Kuis", command=take_quiz, font=("Arial", 12), bg="#add8e6", fg="black", width=20).pack(pady=10)
+    tk.Button(menu_window, text="Lihat Total Skor", command=view_total_score, font=("Arial", 12), bg="#add8e6", fg="black", width=20).pack(pady=10)
+    tk.Button(menu_window, text="Logout", command=lambda: logout(menu_window), font=("Arial", 12), bg="#ff7f7f").pack(pady=10)
+
+    menu_window.geometry("400x400")
+    menu_window.mainloop()
 
