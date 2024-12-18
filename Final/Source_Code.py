@@ -137,6 +137,14 @@ def view_total_score():
     latest_score = score_stack.peek()
     messagebox.showinfo("Total Skor", f"Total skor: {total_score}\nSkor terbaru: {latest_score}")
 
+# Fungsi Reset Skor
+def reset_score():
+    if score_stack.kosong():
+        messagebox.showinfo("Reset Skor", "Tidak ada skor untuk direset.")
+        return
+    score_stack.items = []  # Reset skor dalam stack
+    messagebox.showinfo("Reset Skor", "Semua skor berhasil direset!")
+
 
 
 
