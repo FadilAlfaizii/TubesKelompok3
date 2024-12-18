@@ -249,6 +249,54 @@ def show_menu():
     menu_window.geometry("400x400")
     menu_window.mainloop()
 
+#menunjukkan menu untuk user
+def show_menu_user():
+    menu_window = tk.Tk()
+    menu_window.title("Kuis Menu")
+    menu_window.configure(bg="#f0f8ff")
 
+    tk.Label(menu_window, text="Kuis Management System", font=("Helvetica", 16, "bold"), bg="#4682b4", fg="white", padx=10, pady=10).pack(fill=tk.X)
 
+    tk.Button(menu_window, text="Mulai Kuis", command=take_quiz, font=("Arial", 12), bg="#add8e6", fg="black", width=20).pack(pady=10)
+    tk.Button(menu_window, text="Lihat Total Skor", command=view_total_score, font=("Arial", 12), bg="#add8e6", fg="black", width=20).pack(pady=10)
+    tk.Button(menu_window, text="Logout", command=lambda: logout(menu_window), font=("Arial", 12), bg="#ff7f7f").pack(pady=10)
+
+    menu_window.geometry("400x400")
+    menu_window.mainloop()
+
+# Login GUInya
+def main_login():
+    global username_entry, password_entry, login_window 
+    login_window = tk.Tk()
+    login_window.title("Login System")
+    login_window.configure(bg="#f5f5f5")
+
+    tk.Label(login_window, text="Welcome to Kuis System", font=("Helvetica", 16, "bold"), bg="#f5f5f5", fg="#333").grid(row=0, column=0, columnspan=2, pady=10)
+
+    tk.Label(login_window, text="Username:", font=("Arial", 12), bg="#f5f5f5").grid(row=1, column=0, padx=10, pady=5, sticky="w")
+    username_entry = tk.Entry(login_window, font=("Arial", 12))
+    username_entry.grid(row=1, column=1, padx=10, pady=5)
+
+    tk.Label(login_window, text="Password:", font=("Arial", 12), bg="#f5f5f5").grid(row=2, column=0, padx=10, pady=5, sticky="w")
+    password_entry = tk.Entry(login_window, show="*", font=("Arial", 12))
+    password_entry.grid(row=2, column=1, padx=10, pady=5)
+
+    tk.Button(login_window, text="Login", command=login, font=("Arial", 12), bg="#4caf50", fg="white", width=15).grid(row=3, column=0, columnspan=2, pady=10)
+
+    # Menambahkan teks "Tidak ada account? Register now"
+    tk.Label(login_window, text="Belum ada akun?", font=("Arial", 10), bg="#f5f5f5", fg="#333").grid(row=4, column=0, padx=10, pady=5, sticky="e")
+    register_label = tk.Label(login_window, text="Buat Sekarang", font=("Arial", 10, "underline"), fg="blue", bg="#f5f5f5", cursor="hand2")
+    register_label.grid(row=4, column=1, sticky="w")
+
+    # membindingkan teks yang dapat diklik ke fungsi `register`
+    register_label.bind("<Button-1>", lambda e: register())
+
+    login_window.geometry("400x250")
+    login_window.mainloop()
+
+#untuk memunculkan funsgi fungsinya
+if __name__ == "__main__":
+    memuat_pengguna()
+    load_questions()
+    main_login()
 
