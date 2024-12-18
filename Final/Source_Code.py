@@ -1,3 +1,6 @@
+import tkinter as tk
+from tkinter import messagebox, simpledialog
+
 # Struktur Data Stack
 class Stack:
     def __init__(self, capacity=10):
@@ -227,7 +230,24 @@ def reset_score():
     score_stack.items = []  # Reset skor dalam stack
     messagebox.showinfo("Reset Skor", "Semua skor berhasil direset!")
 
+# Menunjukkan menu
+def show_menu():
+    menu_window = tk.Tk()
+    menu_window.title("Kuis Menu")
+    menu_window.configure(bg="#f0f8ff")
 
+    tk.Label(menu_window, text="Kuis Management System", font=("Helvetica", 16, "bold"), bg="#4682b4", fg="white", padx=10, pady=10).pack(fill=tk.X)
+
+    tk.Button(menu_window, text="Tambah Pertanyaan", command=add_question, font=("Arial", 12), bg="#add8e6", fg="black", width=20).pack(pady=10)
+    tk.Button(menu_window, text="Lihat Pertanyaan", command=view_questions, font=("Arial", 12), bg="#add8e6", fg="black", width=20).pack(pady=10)
+    tk.Button(menu_window, text="Edit Pertanyaan", command=edit_question, font=("Arial", 12), bg="#add8e6", fg="black", width=20).pack(pady=10)
+    tk.Button(menu_window, text="Hapus Pertanyaan", command=delete_question, font=("Arial", 12), bg="#add8e6", fg="black", width=20).pack(pady=10)
+    tk.Button(menu_window, text="Mulai Kuis", command=take_quiz, font=("Arial", 12), bg="#add8e6", fg="black", width=20).pack(pady=10)
+    tk.Button(menu_window, text="Lihat Total Skor", command=view_total_score, font=("Arial", 12), bg="#add8e6", fg="black", width=20).pack(pady=10)
+    tk.Button(menu_window, text="Exit", command=menu_window.destroy, font=("Arial", 12), bg="#ff7f7f", fg="black", width=20).pack(pady=10)
+
+    menu_window.geometry("400x400")
+    menu_window.mainloop()
 
 
 
