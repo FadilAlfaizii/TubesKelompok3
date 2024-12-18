@@ -65,9 +65,11 @@ class Queue:
         return self.front is None
 
 
+# Global Variabel
 users = {"admin": "admin"}  # Default login
 q_pertanyaan = Queue()  # Queue untuk soal
-skor_stack = Stack()  # Stack untuk skor 
+score_stack = Stack()  # Stack untuk skor 
+
 
 def register():
     new_username = simpledialog.askstring("Register", "Masukkan Username:")
@@ -87,10 +89,12 @@ def register():
     simpan_pengguna()  # Simpan perubahan data pengguna
     messagebox.showinfo("Sukses", f"Akun baru untuk username: {new_username}")
 
+
 def simpan_pengguna():
     with open("users.txt", "w") as file:
         for username, password in users.items():
             file.write(f"{username},{password}\n")
+
 
 def memuat_pengguna():
     try:
@@ -101,10 +105,12 @@ def memuat_pengguna():
     except FileNotFoundError:
         pass
 
+
 def logout(current_window):
     current_window.destroy()
     messagebox.showinfo("Logout", "Anda berhasil logout.")
     main_login()
+
 
 def login():
     username = username_entry.get()
@@ -118,8 +124,9 @@ def login():
         login_window.destroy()
         show_menu_user()
     else:
-        messagebox.showerror
-        
+        messagebox.showerror("Error", "Username atau Password salah!")
+
+
 # Tambah Pertanyaan
 def tambah_pertanyaan():
     pertanyaan = input("Masukkan pertanyaan: ")
@@ -199,25 +206,25 @@ def take_quiz():
         jawaban = input("Kuis", q["pertanyaan"])
         if jawaban and jawaban.lower() == q["jawaban"].lower():
             skor += 1
-    skor_stack.push(skor)  # Simpan skor ke Stack
+    score_stack.push(skor)  # Simpan skor ke Stack
     print("Kuis Selesai", f"Skor Anda: {skor}/{len(pertanyaan)}")
 
 
 # Lihat Total Skor 
 def view_total_score():
-    if skor_stack.kosong():
+    if score_stack.kosong():
         print("Total Skor", "Belum ada skor yang tersedia.")
         return
-    total_score = sum(skor_stack.items)
-    latest_score = skor_stack.peek()
+    total_score = sum(score_stack.items)
+    latest_score = score_stack.peek()
     print("Total Skor", f"Total skor: {total_score}\nSkor terbaru: {latest_score}")
 
 # Fungsi Reset Skor
 def reset_score():
-    if skor_stack.kosong():
+    if score_stack.kosong():
         messagebox.showinfo("Reset Skor", "Tidak ada skor untuk direset.")
         return
-    skor_stack.items = []  # Reset skor dalam stack
+    score_stack.items = []  # Reset skor dalam stack
     messagebox.showinfo("Reset Skor", "Semua skor berhasil direset!")
 
 
