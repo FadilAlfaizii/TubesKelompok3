@@ -64,15 +64,69 @@ class Queue:
     def kosong(self):
         return self.front is None
 
-q_pertanyaan = Queue() # Queue untuk soal
-score_stack = Stack()  # Stack untuk skor
 
+users = {"admin": "admin"}  # Default login
+queue_pertanyaan = Queue()  # Queue untuk soal
+score_stack = Stack()  # Stack untuk skor 
+
+def register():
+    new_username = simpledialog.askstring("Register", "Masukkan Username:")
+    if not new_username:
+        messagebox.showerror("Error", "Username tidak boleh kosong.")
+        return
+    elif new_username in users:
+        messagebox.showerror("Error", "Username telah dipakai.")
+        return
+
+    new_password = simpledialog.askstring("Register", "Masukkan Password:")
+    if not new_password:
+        messagebox.showerror("Error", "Password tidak boleh kosong.")
+        return
+
+    users[new_username] = new_password
+    simpan_pengguna()  # Simpan perubahan data pengguna
+    messagebox.showinfo("Sukses", f"Akun baru untuk username: {new_username}")
+
+def simpan_pengguna():
+    with open("users.txt", "w") as file:
+        for username, password in users.items():
+            file.write(f"{username},{password}\n")
+
+def memuat_pengguna():
+    try:
+        with open("users.txt", "r") as file:
+            for line in file:
+                username, password = line.strip().split(",")
+                users[username] = password
+    except FileNotFoundError:
+        pass
+
+def logout(current_window):
+    current_window.destroy()
+    messagebox.showinfo("Logout", "Anda berhasil logout.")
+    main_login()
+
+def login():
+    username = username_entry.get()
+    password = password_entry.get()
+    if username == "admin" and users[username] == password:
+        messagebox.showinfo("Sukses", "Login sukses!")
+        login_window.destroy()
+        show_menu()
+    elif username in users and users[username] == password:
+        messagebox.showinfo("Sukses", "Login sukses!")
+        login_window.destroy()
+        show_menu_user()
+    else:
+        messagebox.showerror
+        
 # Tambah Pertanyaan
 def tambah_pertanyaan():
     pertanyaan = input("Masukkan pertanyaan: ")
     jawaban = input("Masukkan jawaban: ")
     if pertanyaan and jawaban:
         q_pertanyaan.enqueue({"pertanyaan": pertanyaan, "jawaban": jawaban})
+        simpan_pertanyaan()
 
 # Lihat Pertanyaan
 def lihat_pertanyaan():
@@ -89,6 +143,7 @@ def hapus_pertanyaan():
         if q_pertanyaan.kosong():
             raise IndexError("Tidak ada pertanyaan to delete.")
         q_pertanyaan.dequeue()
+        simpan_pertanyaan()
         print("Pertanyaan deleted from the quiz!")
     except IndexError as e:
         print(str(e))
@@ -114,28 +169,48 @@ def edit_pertanyaan():
     else:
         print("Pertanyaan atau jawaban tidak boleh kosong!")
 
+
+def simpan_pertanyaan():
+    with open("pertanyaan.txt", "w") as file:
+        pertanyaan = q_pertanyaan.tampil()
+        for q in pertanyaan:
+            file.write(f"{q['pertanyaan']}\n{q['jawaban']}\n\n")
+
+
+def load_pertanyaan():
+    try:
+        with open("pertanyaan.txt", "r") as file:
+            for line in file:
+                pertanyaan = line.strip()
+                jawaban = file.readline().strip()
+                q_pertanyaan.enqueue({"pertanyaan": pertanyaan, "jawaban": jawaban})
+    except FileNotFoundError:
+        pass
+
+
 # Mulai Kuis
 def take_quiz():
-    if queue_pertanyaan.kosong():
-        messagebox.showerror("Error", "Tidak ada pertanyaan yang tersedia for the quiz.")
+    if q_pertanyaan.kosong():
+        print("Error", "Tidak ada pertanyaan yang tersedia for the quiz.")
         return
-    pertanyaan = queue_pertanyaan.tampil()
+    pertanyaan = q_pertanyaan.tampil()
     skor = 0
     for q in pertanyaan:
-        jawaban = simpledialog.askstring("Kuis", q["pertanyaan"])
+        jawaban = input("Kuis", q["pertanyaan"])
         if jawaban and jawaban.lower() == q["jawaban"].lower():
             skor += 1
     score_stack.push(skor)  # Simpan skor ke Stack
-    messagebox.showinfo("Kuis Selesai", f"Skor Anda: {skor}/{len(pertanyaan)}")
+    print("Kuis Selesai", f"Skor Anda: {skor}/{len(pertanyaan)}")
+
 
 # Lihat Total Skor 
 def view_total_score():
     if score_stack.kosong():
-        messagebox.showinfo("Total Skor", "Belum ada skor yang tersedia.")
+        print("Total Skor", "Belum ada skor yang tersedia.")
         return
     total_score = sum(score_stack.items)
     latest_score = score_stack.peek()
-    messagebox.showinfo("Total Skor", f"Total skor: {total_score}\nSkor terbaru: {latest_score}")
+    print("Total Skor", f"Total skor: {total_score}\nSkor terbaru: {latest_score}")
 
 # Fungsi Reset Skor
 def reset_score():
