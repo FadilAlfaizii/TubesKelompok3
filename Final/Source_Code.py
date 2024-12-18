@@ -67,7 +67,7 @@ class Queue:
 q_pertanyaan = Queue() # Queue untuk soal
 users = {"admin": "admin"}  # Default login
 queue_pertanyaan = Queue()  # Queue untuk soal
-score_stack = Stack()  # Stack untuk skor
+score_stack = Stack()  # Stack untuk skor 
 
 # Tambah Pertanyaan
 def tambah_pertanyaan():
