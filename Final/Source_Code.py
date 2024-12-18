@@ -1,3 +1,6 @@
+import tkinter as tk
+from tkinter import messagebox, simpledialog
+
 # Struktur Data Stack
 class Stack:
     def __init__(self, capacity=10):
